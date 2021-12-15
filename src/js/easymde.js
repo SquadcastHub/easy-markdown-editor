@@ -861,24 +861,30 @@ function drawUploadedImage(editor) {
  * @param editor {EasyMDE} The EasyMDE object
  * @param url {string} The url of the uploaded image
  */
-function afterImageUploaded(editor, url) {
+function afterImageUploaded(editor, url, fileName='') {
     var cm = editor.codemirror;
     var stat = getState(cm);
     var options = editor.options;
     var imageName = url.substr(url.lastIndexOf('/') + 1);
-    var ext = imageName.substring(imageName.lastIndexOf('.') + 1).replace(/\?.*$/, '').toLowerCase();
+    var ext = imageName.substring(imageName.lastIndexOf('.') + 1).replace(/\?.*$/, '');
+
+    if (fileName === '') {
+      fileName = imageName
+    }
 
     // Check if media is an image
     if (['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext)) {
-        _replaceSelection(cm, stat.image, options.insertTexts.uploadedImage, url);
+        var text_link = options.insertTexts.link;
+        text_link[0] = '![' + fileName
+        _replaceSelection(cm, stat.image, text_link, url);
     } else {
         var text_link = options.insertTexts.link;
-        text_link[0] = '[' + imageName;
+        text_link[0] = '[' + fileName;
         _replaceSelection(cm, stat.link, text_link, url);
     }
 
     // show uploaded image filename for 1000ms
-    editor.updateStatusBar('upload-image', editor.options.imageTexts.sbOnUploaded.replace('#image_name#', imageName));
+    editor.updateStatusBar('upload-image', editor.options.imageTexts.sbOnUploaded.replace('#image_name#', fileName));
     setTimeout(function () {
         editor.updateStatusBar('upload-image', editor.options.imageTexts.sbInit);
     }, 1000);
@@ -2322,8 +2328,8 @@ EasyMDE.prototype.openBrowseFileWindow = function (onSuccess, onError) {
  */
 EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
     var self = this;
-    onSuccess = onSuccess || function onSuccess(imageUrl) {
-        afterImageUploaded(self, imageUrl);
+    onSuccess = onSuccess || function onSuccess(imageUrl, fileName='') {
+        afterImageUploaded(self, imageUrl, fileName);
     };
 
     function onErrorSup(errorMessage) {
@@ -2413,8 +2419,8 @@ EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
 EasyMDE.prototype.uploadImageUsingCustomFunction = function (imageUploadFunction, file) {
     var self = this;
 
-    function onSuccess(imageUrl) {
-        afterImageUploaded(self, imageUrl);
+    function onSuccess(imageUrl, fileName='') {
+        afterImageUploaded(self, imageUrl, fileName);
     }
 
     function onError(errorMessage) {
