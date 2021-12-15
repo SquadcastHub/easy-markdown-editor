@@ -1,5 +1,5 @@
 {
-    "name": "easymde",
+    "name": "@SquadcastHub/easymde",
     "version": "2.15.0",
     "description": "A simple, beautiful, and embeddable JavaScript Markdown editor that easy to use. Features include autosaving and spell checking.",
     "files": [
@@ -39,7 +39,7 @@
         "vinyl-buffer": "^1.0.0",
         "vinyl-source-stream": "^2.0.0"
     },
-    "repository": "github:Ionaru/easy-markdown-editor",
+    "repository": "github:SquadcastHub/easy-markdown-editor",
     "scripts": {
         "prepare": "gulp",
         "test": "npm run lint && npm run test:types",
