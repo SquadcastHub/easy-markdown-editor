@@ -224,6 +224,7 @@ declare namespace EasyMDE {
         overlayMode?: OverlayModeOptions;
 
         direction?: 'ltr' | 'rtl';
+        renderImageUploadsAsLinks?: boolean;
     }
 }
 

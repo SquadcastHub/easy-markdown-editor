@@ -861,7 +861,7 @@ function drawUploadedImage(editor) {
  * @param editor {EasyMDE} The EasyMDE object
  * @param url {string} The url of the uploaded image
  */
-function afterImageUploaded(editor, url, fileName='') {
+function afterImageUploaded(editor, url, fileName = '') {
     var cm = editor.codemirror;
     var stat = getState(cm);
     var options = editor.options;
@@ -873,7 +873,7 @@ function afterImageUploaded(editor, url, fileName='') {
     }
 
     // Check if media is an image
-    if (['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext)) {
+    if (['png', 'jpg', 'jpeg', 'gif', 'svg'].includes(ext) && !options.renderImageUploadsAsLinks) {
         var text_link = options.insertTexts.link;
         text_link[0] = '![' + fileName
         _replaceSelection(cm, stat.image, text_link, url);
@@ -1102,7 +1102,6 @@ function _replaceSelection(cm, active, startEnd, url) {
             endPoint.ch += start.length;
         }
     }
-    cm.setSelection(startPoint, endPoint);
     cm.focus();
 }
 
@@ -1602,7 +1601,7 @@ var toolbarBuiltInButtons = {
 };
 
 var insertTexts = {
-    link: ['[', '](#url#)'],
+    link: ['[', '](#url#) '],
     image: ['![](', '#url#)'],
     uploadedImage: ['![](#url#)', ''],
     // uploadedImage: ['![](#url#)\n', ''], // TODO: New line insertion doesn't work here.
@@ -2098,6 +2097,7 @@ EasyMDE.prototype.render = function (el) {
         inputStyle: (options.inputStyle != undefined) ? options.inputStyle : isMobile() ? 'contenteditable' : 'textarea',
         spellcheck: (options.nativeSpellcheck != undefined) ? options.nativeSpellcheck : true,
         autoRefresh: (options.autoRefresh != undefined) ? options.autoRefresh : false,
+        renderImageUploadsAsLinks: options.renderImageUploadsAsLinks != undefined ? options.renderImageUploadsAsLinks : false
     });
 
     this.codemirror.getScrollerElement().style.minHeight = options.minHeight;
@@ -2328,7 +2328,7 @@ EasyMDE.prototype.openBrowseFileWindow = function (onSuccess, onError) {
  */
 EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
     var self = this;
-    onSuccess = onSuccess || function onSuccess(imageUrl, fileName='') {
+    onSuccess = onSuccess || function onSuccess(imageUrl, fileName = '') {
         afterImageUploaded(self, imageUrl, fileName);
     };
 
@@ -2419,7 +2419,7 @@ EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
 EasyMDE.prototype.uploadImageUsingCustomFunction = function (imageUploadFunction, file) {
     var self = this;
 
-    function onSuccess(imageUrl, fileName='') {
+    function onSuccess(imageUrl, fileName = '') {
         afterImageUploaded(self, imageUrl, fileName);
     }
 
