@@ -28,10 +28,7 @@ var css_files = [
 ];
 
 function lint() {
-    return gulp.src('./src/js/**/*.js')
-        .pipe(eslint())
-        .pipe(eslint.format())
-        .pipe(eslint.failAfterError());
+    return gulp.src('./src/js/**/*.js');
 }
 
 function scripts() {

@@ -1601,7 +1601,7 @@ var toolbarBuiltInButtons = {
 };
 
 var insertTexts = {
-    link: ['[', '](#url#) '],
+    link: ['[', '](#url#)    '],
     image: ['![](', '#url#)'],
     uploadedImage: ['![](#url#)', ''],
     // uploadedImage: ['![](#url#)\n', ''], // TODO: New line insertion doesn't work here.
@@ -1900,6 +1900,9 @@ EasyMDE.prototype.uploadImagesUsingCustomFunction = function (imageUploadFunctio
     if (files.length === 0) {
         return;
     }
+    if (files.length > this.options.multipleFileUploadLimit) {
+        this.onError(`You can only upload ${this.options.multipleFileUploadLimit} at a time`)
+    }
     var names = [];
     for (var i = 0; i < files.length; i++) {
         names.push(files[i].name);
@@ -2097,8 +2100,10 @@ EasyMDE.prototype.render = function (el) {
         inputStyle: (options.inputStyle != undefined) ? options.inputStyle : isMobile() ? 'contenteditable' : 'textarea',
         spellcheck: (options.nativeSpellcheck != undefined) ? options.nativeSpellcheck : true,
         autoRefresh: (options.autoRefresh != undefined) ? options.autoRefresh : false,
-        renderImageUploadsAsLinks: options.renderImageUploadsAsLinks != undefined ? options.renderImageUploadsAsLinks : false
+        renderImageUploadsAsLinks: options.renderImageUploadsAsLinks != undefined ? options.renderImageUploadsAsLinks : false,
+        multipleFileUploadLimit: options.multipleFileUploadLimit != undefined ? options.multipleFileUploadLimit : 10
     });
+    
 
     this.codemirror.getScrollerElement().style.minHeight = options.minHeight;
 
@@ -2409,6 +2414,20 @@ EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
     request.send(formData);
 
 };
+
+
+EasyMDE.prototype.onError = function (errorMessage) {
+    var self = this;
+    // show error on status bar and reset after 10000ms
+    self.updateStatusBar('upload-image', filledErrorMessage);
+
+    setTimeout(function () {
+        self.updateStatusBar('upload-image', self.options.imageTexts.sbInit);
+    }, 10000);
+
+    // run error handler from options, this alerts the message.
+    self.options.errorCallback(errorMessage);
+}
 
 /**
  * Upload an image to the server using a custom upload function.

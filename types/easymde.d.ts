@@ -225,6 +225,7 @@ declare namespace EasyMDE {
 
         direction?: 'ltr' | 'rtl';
         renderImageUploadsAsLinks?: boolean;
+        multipleFileUploadLimit? : number;
     }
 }
 
