@@ -1601,7 +1601,7 @@ var toolbarBuiltInButtons = {
 };
 
 var insertTexts = {
-    link: ['[', '](#url#)    '],
+    link: ['[', '](#url#)\n'],
     image: ['![](', '#url#)'],
     uploadedImage: ['![](#url#)', ''],
     // uploadedImage: ['![](#url#)\n', ''], // TODO: New line insertion doesn't work here.
