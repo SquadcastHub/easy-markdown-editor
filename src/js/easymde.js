@@ -1901,7 +1901,8 @@ EasyMDE.prototype.uploadImagesUsingCustomFunction = function (imageUploadFunctio
         return;
     }
     if (files.length > this.options.multipleFileUploadLimit) {
-        this.onError(`You can only upload ${this.options.multipleFileUploadLimit} at a time`)
+        this.onError(`You can only upload ${this.options.multipleFileUploadLimit} files at a time`)
+        return;
     }
     var names = [];
     for (var i = 0; i < files.length; i++) {
@@ -2419,7 +2420,7 @@ EasyMDE.prototype.uploadImage = function (file, onSuccess, onError) {
 EasyMDE.prototype.onError = function (errorMessage) {
     var self = this;
     // show error on status bar and reset after 10000ms
-    self.updateStatusBar('upload-image', filledErrorMessage);
+    self.updateStatusBar('upload-image', errorMessage);
 
     setTimeout(function () {
         self.updateStatusBar('upload-image', self.options.imageTexts.sbInit);
